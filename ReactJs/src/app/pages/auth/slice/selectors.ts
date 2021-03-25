@@ -15,10 +15,15 @@ export const selectAuthIsLogin = createSelector(
 
 export const selectAuthLoading = createSelector(
   [selectAuth],
-  (state: AuthState) => !!state.accessToken,
+  (state: AuthState) => state.loading,
 );
 
 export const selectAuthError = createSelector(
   [selectAuth],
-  (state: AuthState) => !!state.accessToken,
+  (state: AuthState) => state.error,
+);
+
+export const selectIsLoginSucceed = createSelector(
+  [selectAuth],
+  (state: AuthState) => !!state.isLoginSucceed,
 );

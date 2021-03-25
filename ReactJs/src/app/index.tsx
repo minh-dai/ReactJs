@@ -19,6 +19,7 @@ import { PublicRoute } from './pages/auth/components/PublicRoute';
 import { AuthPage } from './pages/auth/AuthPage';
 import { ProtectedRoute } from './pages/auth/components/ProtectedRoute';
 import { ProtectedPage } from './pages/protected/ProtectedPage';
+import { AuthContextProvider } from './pages/auth/contexts/AuthContext';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -32,16 +33,21 @@ export function App() {
         <meta name="description" content="A React Boilerplate application" />
       </Helmet>
 
-      <Switch>
-        <ProtectedRoute path={'/'} component={ProtectedPage}></ProtectedRoute>
-        <PublicRoute exact path={'/auth'} component={AuthPage} />
-        <PublicRoute exact path={'/'} component={HomePage} />
-        <Redirect path={'/login'} to={'/auth/login'}></Redirect>
-        <Redirect path={'/register'} to={'/auth/register'}></Redirect>
-        <Redirect path={'/forgot'} to={'/auth/forgot'}></Redirect>
-        <Redirect path={'/reset'} to={'/auth/reset'}></Redirect>
-        <Route component={NotFoundPage} />
-      </Switch>
+      <AuthContextProvider>
+        <Switch>
+          <PublicRoute path={'/auth'} component={AuthPage} />
+          <Route exact path={'/home'} component={HomePage} />
+          <ProtectedRoute
+            path={'/i'}
+            component={ProtectedPage}
+          ></ProtectedRoute>
+          <Redirect exact path={'/login'} to={'/auth/login'}></Redirect>
+          <Redirect exact path={'/register'} to={'/auth/register'}></Redirect>
+          <Redirect exact path={'/forgot'} to={'/auth/forgot'}></Redirect>
+          <Redirect exact path={'/reset'} to={'/auth/reset'}></Redirect>
+          <Route component={NotFoundPage} />
+        </Switch>
+      </AuthContextProvider>
       <GlobalStyle />
     </BrowserRouter>
   );

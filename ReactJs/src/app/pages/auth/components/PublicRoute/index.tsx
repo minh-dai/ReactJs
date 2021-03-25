@@ -1,24 +1,39 @@
 /**
  *
- * PublicRoute
+ * ProtectedRoute
  *
  */
 
-import { type } from 'os';
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
-
 import { useAuthContext } from '../../contexts/AuthContext';
 
-type Props = RouteProps;
+type Props = RouteProps & {
+  component: any;
+};
 
-export const PublicRoute: React.FC<Props> = (props: Props) => {
-  const {} = useAuthContext();
-  const condition = true;
-
-  return condition ? (
-    <Route path={props.path} exact={props.exact} component={props.component} />
-  ) : (
-    <Redirect to="/" />
+export const PublicRoute: React.FC<Props> = ({
+  component: Component,
+  ...rest
+}: Props) => {
+  const { isLogin } = useAuthContext();
+  return (
+    <Route
+      {...rest}
+      render={props => {
+        return !isLogin ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/i',
+              state: {
+                from: props.location,
+              },
+            }}
+          />
+        );
+      }}
+    ></Route>
   );
 };
